@@ -3,11 +3,13 @@
   <name>swarm_slam_sim</name>
   <version>0.1.0</version>
   <description>Multi-robot Gazebo simulator for Swarm-SLAM</description>
-  <maintainer email="akarshkumargowda23@gmail.com">User</maintainer>
+  <maintainer email="user@example.com">User</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
+  <depend>rclpy</depend>
   <depend>gazebo_ros</depend>
   <depend>gazebo_plugins</depend>
   <depend>robot_state_publisher</depend>

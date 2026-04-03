@@ -117,7 +117,7 @@ def generate_launch_description():
     )
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'building.world'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'parking_lot.world'),
         description='Path to Gazebo world file'
     )
 
@@ -141,10 +141,9 @@ def generate_launch_description():
     # (name, x, y, yaw_rad, spawn_delay_s)
     # Stagger delays so Gazebo isn't flooded with simultaneous spawn requests.
     robots = [
-        # robot_0: Large Bay, robot_1: Medium Room, robot_2: Small Room B
-        ('robot_0', -20.0,  12.0, 0.0,      3.0),  # Large Bay
-        ('robot_1',  18.0,  16.0, 3.14159,  5.0),  # Office
-        ('robot_2',  18.0, -12.0, 1.5708,   7.0),  # Storage Room
+        ('robot_0', -8.0,  0.0, 0.0,  3.0),
+        ('robot_1',  0.0,  0.0, 0.0,  5.0),
+        ('robot_2',  8.0,  0.0, 0.0,  7.0),
     ]
 
     all_nodes = [use_sim_time_arg, gui_arg, world_arg, gazebo_launch]

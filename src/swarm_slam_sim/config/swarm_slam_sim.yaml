@@ -1,0 +1,49 @@
+# swarm_slam_sim.yaml
+# Swarm-SLAM config tuned for Gazebo simulation.
+# Based on graco_lidar.yaml but adjusted for:
+#   - Cleaner sim data (lower thresholds)
+#   - Faster keyframe generation (robots move slower than real datasets)
+#   - Smaller voxel size (sim LiDAR has no noise sparsification needed)
+
+/**:
+  ros__parameters:
+    frontend:
+      odom_topic: "odom"
+      pointcloud_topic: "pointcloud"
+      sensor_type: "lidar"
+      voxel_size: 0.3
+      registration_min_inliers: 30
+      inter_robot_loop_closure_budget: 1
+      inter_robot_detection_period_sec: 3
+      enable_sparsification: true
+      max_queue_size: 10
+      similarity_threshold: 0.7
+      global_descriptor_technique: "scancontext"
+      global_descriptors_topic: "global_descriptors"
+      keyframe_generation_ratio_distance: 0.3
+      intra_loop_min_inbetween_keyframes: 10
+      pointcloud_odom_approx_time_sync_s: 1.0
+      detection_publication_period_sec: 0.5
+      detection_publication_max_elems_per_msg: 100
+      enable_intra_robot_loop_closures: true
+      use_vertex_cover_selection: true
+      map_manager_process_period_ms: 100
+    neighbor_management:
+      enable_neighbor_monitoring: true
+      max_heartbeat_delay_sec: 10.0
+      init_delay_sec: 5.0
+      heartbeat_period_sec: 1.0
+    backend:
+      pose_graph_optimization_start_period_ms: 10000
+      pose_graph_optimization_loop_period_ms: 100
+      max_waiting_time_sec: 3600
+      enable_broadcast_tf_frames: true
+    evaluation:
+      enable_logs: false
+      log_folder: "results"
+      enable_gps_recording: false
+      gps_topic: "gps/fix"
+      enable_sparsification_comparison: false
+    visualization:
+      enable: true
+      publishing_period_ms: 1000

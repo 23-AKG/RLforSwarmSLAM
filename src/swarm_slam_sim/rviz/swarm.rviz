@@ -1,0 +1,177 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Splitter Ratio: 0.6
+    Tree Height: 700
+  - Class: rviz_common/Views
+    Name: Views
+
+Visualization Manager:
+  Class: ""
+  Displays:
+
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Value: true
+      Alpha: 0.3
+      Cell Size: 1
+      Color: 160; 160; 160
+      Plane Cell Count: 80
+
+    # ── ROBOT 0 — Terracotta red ───────────────────────────────
+    - Class: rviz_default_plugins/RobotModel
+      Name: "[R0] Model"
+      Value: true
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_0/robot_description
+
+    - Class: rviz_default_plugins/PointCloud2
+      Name: "[R0] LiDAR"
+      Value: true
+      Topic:
+        Depth: 2
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_0/lidar/points
+      Color: 204; 85; 60
+      Color Transformer: FlatColor
+      Size (m): 0.06
+      Style: Points
+      Alpha: 1.0
+
+    - Class: rviz_default_plugins/Odometry
+      Name: "[R0] Path"
+      Value: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_0/odom
+      Keep: 200
+      Color: 204; 85; 60
+      Angle Tolerance: 0.1
+      Position Tolerance: 0.1
+      Shape:
+        Alpha: 0.6
+        Color: 204; 85; 60
+        Head Length: 0.15
+        Head Radius: 0.06
+        Shaft Length: 0.25
+        Shaft Radius: 0.03
+
+    # ── ROBOT 1 — Slate blue ───────────────────────────────────
+    - Class: rviz_default_plugins/RobotModel
+      Name: "[R1] Model"
+      Value: true
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_1/robot_description
+
+    - Class: rviz_default_plugins/PointCloud2
+      Name: "[R1] LiDAR"
+      Value: true
+      Topic:
+        Depth: 2
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_1/lidar/points
+      Color: 76; 114; 176
+      Color Transformer: FlatColor
+      Size (m): 0.06
+      Style: Points
+      Alpha: 1.0
+
+    - Class: rviz_default_plugins/Odometry
+      Name: "[R1] Path"
+      Value: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_1/odom
+      Keep: 200
+      Color: 76; 114; 176
+      Angle Tolerance: 0.1
+      Position Tolerance: 0.1
+      Shape:
+        Alpha: 0.6
+        Color: 76; 114; 176
+        Head Length: 0.15
+        Head Radius: 0.06
+        Shaft Length: 0.25
+        Shaft Radius: 0.03
+
+    # ── ROBOT 2 — Sage green ───────────────────────────────────
+    - Class: rviz_default_plugins/RobotModel
+      Name: "[R2] Model"
+      Value: true
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_2/robot_description
+
+    - Class: rviz_default_plugins/PointCloud2
+      Name: "[R2] LiDAR"
+      Value: true
+      Topic:
+        Depth: 2
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_2/lidar/points
+      Color: 85; 150; 100
+      Color Transformer: FlatColor
+      Size (m): 0.06
+      Style: Points
+      Alpha: 1.0
+
+    - Class: rviz_default_plugins/Odometry
+      Name: "[R2] Path"
+      Value: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /robot_2/odom
+      Keep: 200
+      Color: 85; 150; 100
+      Angle Tolerance: 0.1
+      Position Tolerance: 0.1
+      Shape:
+        Alpha: 0.6
+        Color: 85; 150; 100
+        Head Length: 0.15
+        Head Radius: 0.06
+        Shaft Length: 0.25
+        Shaft Radius: 0.03
+
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: robot_0/odom
+    Frame Rate: 15
+
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Scale: 12
+      X: 0
+      Y: 0
+      Name: Top-Down
