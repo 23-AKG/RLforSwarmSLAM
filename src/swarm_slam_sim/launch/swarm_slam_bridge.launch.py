@@ -144,7 +144,7 @@ def generate_launch_description():
             }.items(),
         )
 
-        swarm_start_time = 20.0 + rid * 5.0
+        swarm_start_time = 40.0 + rid * 5.0
         delayed_cslam = TimerAction(
             period=swarm_start_time,
             actions=[
