@@ -16,7 +16,10 @@ class OdomToPath(Node):
         self.declare_parameter('robot_name', 'robot_0')
         ns = self.get_parameter('robot_name').value
         self.path = Path()
-        self.path.header.frame_id = f'{ns}/odom'
+        # self.path.header.frame_id = f'{ns}/odom'
+        # self.path.header.frame_id = 'world'
+        self.path.header.frame_id = 'robot_0/odom'
+
         self.pub = self.create_publisher(Path, f'/{ns}/path', 10)
         self.create_subscription(
             Odometry, f'/{ns}/odom', self.callback,
@@ -24,9 +27,22 @@ class OdomToPath(Node):
 
     def callback(self, msg):
         pose = PoseStamped()
-        pose.header = msg.header
+        # pose.header = msg.header
+        pose.header.frame_id = 'robot_0'
+        pose.header.stamp = msg.header.stamp
+
+
         pose.pose = msg.pose.pose
-        self.path.poses.append(pose)
+        # self.path.poses.append(pose)
+        # only add if moved enough (denser + cleaner)
+        if len(self.path.poses) == 0:
+            self.path.poses.append(pose)
+        else:
+            last = self.path.poses[-1].pose.position
+            dx = pose.pose.position.x - last.x
+            dy = pose.pose.position.y - last.y
+            if (dx*dx + dy*dy) > 0.05:   # threshold
+                self.path.poses.append(pose)
         self.path.header.stamp = msg.header.stamp
         if len(self.path.poses) > 3000:
             self.path.poses = self.path.poses[-3000:]

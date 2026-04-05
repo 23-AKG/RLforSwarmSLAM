@@ -117,7 +117,7 @@ def generate_launch_description():
     )
     world_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(pkg_dir, 'worlds', 'building.world'),
+        default_value=os.path.join(pkg_dir, 'worlds', 'building_v2.world'),
         description='Path to Gazebo world file'
     )
 

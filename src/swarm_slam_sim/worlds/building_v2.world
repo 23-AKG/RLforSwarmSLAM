@@ -1,0 +1,496 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="building_v2">
+
+    <physics type="ode">
+      <real_time_update_rate>1000</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <ode>
+        <solver><type>quick</type><iters>50</iters><sor>1.3</sor></solver>
+        <constraints>
+          <cfm>0.0</cfm><erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+    </physics>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>-0.3 0.2 -0.9</direction>
+    </light>
+    <ambient>0.5 0.5 0.5 1</ambient>
+    <background>0.7 0.7 0.7 1</background>
+
+    <!-- Ground -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>200 200</size></plane></geometry>
+          <surface><friction><ode><mu>1</mu><mu2>1</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>200 200</size></plane></geometry>
+          <material><ambient>0.72 0.68 0.62 1</ambient><diffuse>0.72 0.68 0.62 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- OUTER WALLS — 80×60m world (x:-40 to +40, y:-30 to +30)       -->
+    <!-- Larger world = more room for open spaces and robot paths        -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <model name="wall_north"><static>true</static><pose>0 30.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>80.6 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>80.6 0.3 3</size></box></geometry>
+        <material><ambient>0.82 0.80 0.76 1</ambient><diffuse>0.82 0.80 0.76 1</diffuse></material></visual></link></model>
+
+    <model name="wall_south"><static>true</static><pose>0 -30.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>80.6 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>80.6 0.3 3</size></box></geometry>
+        <material><ambient>0.82 0.80 0.76 1</ambient><diffuse>0.82 0.80 0.76 1</diffuse></material></visual></link></model>
+
+    <model name="wall_west"><static>true</static><pose>-40.15 0 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 60.6 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 60.6 3</size></box></geometry>
+        <material><ambient>0.82 0.80 0.76 1</ambient><diffuse>0.82 0.80 0.76 1</diffuse></material></visual></link></model>
+
+    <model name="wall_east"><static>true</static><pose>40.15 0 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 60.6 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 60.6 3</size></box></geometry>
+        <material><ambient>0.82 0.80 0.76 1</ambient><diffuse>0.82 0.80 0.76 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- CENTRAL HUB — open shared space all robots must pass through   -->
+    <!-- x:-8 to +8, y:-8 to +8 — 16×16m, fully open, rich landmarks  -->
+    <!-- This is the key overlap zone for inter-robot loop closure       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Hub boundary walls — partial, with wide openings in all 4 dirs -->
+    <!-- North opening: 6m gap centred at x=0 -->
+    <model name="hub_N_west"><static>true</static><pose>-11 8.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>10 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>10 0.3 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="hub_N_east"><static>true</static><pose>11 8.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>10 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>10 0.3 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+
+    <!-- South opening: 6m gap -->
+    <model name="hub_S_west"><static>true</static><pose>-11 -8.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>10 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>10 0.3 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="hub_S_east"><static>true</static><pose>11 -8.15 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>10 0.3 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>10 0.3 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+
+    <!-- West opening: 6m gap -->
+    <model name="hub_W_north"><static>true</static><pose>-8.15 11 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="hub_W_south"><static>true</static><pose>-8.15 -11 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+
+    <!-- East opening: 6m gap -->
+    <model name="hub_E_north"><static>true</static><pose>8.15 11 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="hub_E_south"><static>true</static><pose>8.15 -11 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+
+    <!-- ── HUB LANDMARKS — rich, varied, every ~3m for dense loop closure ── -->
+    <!-- Tall red cylinder — unmistakable hub centrepiece -->
+    <model name="hub_centre_cylinder"><static>true</static><pose>0 0 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>2.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>2.0</length></cylinder></geometry>
+        <material><ambient>0.85 0.15 0.15 1</ambient><diffuse>0.85 0.15 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="hub_box_NE"><static>true</static><pose>4 4 0.5 0 0 0.785</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.8 0.8 1.0</size></box></geometry>
+        <material><ambient>0.15 0.15 0.85 1</ambient><diffuse>0.15 0.15 0.85 1</diffuse></material></visual></link></model>
+
+    <model name="hub_box_SW"><static>true</static><pose>-4 -4 0.5 0 0 0.785</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.8 0.8 1.0</size></box></geometry>
+        <material><ambient>0.15 0.85 0.15 1</ambient><diffuse>0.15 0.85 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="hub_cyl_NW"><static>true</static><pose>-4 4 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.85 0.55 0.10 1</ambient><diffuse>0.85 0.55 0.10 1</diffuse></material></visual></link></model>
+
+    <model name="hub_cyl_SE"><static>true</static><pose>4 -4 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.25</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.55 0.10 0.85 1</ambient><diffuse>0.55 0.10 0.85 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!--  NORTH ZONE — Office + open lab, x:-40 to +40, y:+8 to +30   -->
+    <!--  TWO entry points into hub from north                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Internal divider splitting north zone into office (east) and open lab (west) -->
+    <!-- Has a doorway gap at y=+18 -->
+    <model name="north_divider_lower"><static>true</static><pose>0 13 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="north_divider_upper"><static>true</static><pose>0 25 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <!-- Gap at y=18 to y=20 — 2m doorway between office and lab -->
+
+    <!-- Office landmarks (east of divider) -->
+    <model name="office_landmark_tall"><static>true</static><pose>25 22 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.5 3 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.5 3 2.0</size></box></geometry>
+        <material><ambient>0.30 0.42 0.58 1</ambient><diffuse>0.30 0.42 0.58 1</diffuse></material></visual></link></model>
+
+    <model name="office_desk1"><static>true</static><pose>15 26 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 0.7 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 0.7 0.8</size></box></geometry>
+        <material><ambient>0.60 0.45 0.28 1</ambient><diffuse>0.60 0.45 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="office_desk2"><static>true</static><pose>22 26 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 0.7 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 0.7 0.8</size></box></geometry>
+        <material><ambient>0.60 0.45 0.28 1</ambient><diffuse>0.60 0.45 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="office_desk3"><static>true</static><pose>30 20 0.4 0 0 1.5707</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 0.7 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 0.7 0.8</size></box></geometry>
+        <material><ambient>0.60 0.45 0.28 1</ambient><diffuse>0.60 0.45 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="office_round_table"><static>true</static><pose>20 17 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.9</radius><length>0.75</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.9</radius><length>0.75</length></cylinder></geometry>
+        <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material></visual></link></model>
+
+    <!-- Open lab landmarks (west of divider) -->
+    <model name="lab_bench_long"><static>true</static><pose>-20 28 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>10 0.7 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>10 0.7 0.8</size></box></geometry>
+        <material><ambient>0.55 0.42 0.28 1</ambient><diffuse>0.55 0.42 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="lab_cylinder_green"><static>true</static><pose>-28 18 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.35</radius><length>2.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.35</radius><length>2.0</length></cylinder></geometry>
+        <material><ambient>0.20 0.65 0.35 1</ambient><diffuse>0.20 0.65 0.35 1</diffuse></material></visual></link></model>
+
+    <model name="lab_rack1"><static>true</static><pose>-35 25 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.6 1.2 1.5</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.6 1.2 1.5</size></box></geometry>
+        <material><ambient>0.30 0.30 0.30 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse></material></visual></link></model>
+
+    <model name="lab_rack2"><static>true</static><pose>-35 20 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.6 1.2 1.5</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.6 1.2 1.5</size></box></geometry>
+        <material><ambient>0.30 0.30 0.30 1</ambient><diffuse>0.30 0.30 0.30 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SOUTH ZONE — workshop + storage, x:-40 to +40, y:-30 to -8   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Internal divider — workshop (west) vs storage (east), gap at y=-18 -->
+    <model name="south_divider_lower"><static>true</static><pose>0 -25 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <model name="south_divider_upper"><static>true</static><pose>0 -13 1.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.3 10 3</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.3 10 3</size></box></geometry>
+        <material><ambient>0.78 0.76 0.72 1</ambient><diffuse>0.78 0.76 0.72 1</diffuse></material></visual></link></model>
+    <!-- Gap at y=-20 to y=-18 — doorway between workshop and storage -->
+
+    <!-- Workshop machines -->
+    <model name="ws_machine1"><static>true</static><pose>-25 -12 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>2.5 1.5 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>2.5 1.5 1.0</size></box></geometry>
+        <material><ambient>0.28 0.28 0.28 1</ambient><diffuse>0.28 0.28 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="ws_machine2"><static>true</static><pose>-25 -20 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>2.5 1.5 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>2.5 1.5 1.0</size></box></geometry>
+        <material><ambient>0.28 0.28 0.28 1</ambient><diffuse>0.28 0.28 0.28 1</diffuse></material></visual></link></model>
+
+    <model name="ws_landmark"><static>true</static><pose>-10 -22 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.0 1.0 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.0 1.0 2.0</size></box></geometry>
+        <material><ambient>0.70 0.38 0.15 1</ambient><diffuse>0.70 0.38 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="ws_bench"><static>true</static><pose>-30 -28 0.4 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>8 0.6 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>8 0.6 0.8</size></box></geometry>
+        <material><ambient>0.60 0.45 0.28 1</ambient><diffuse>0.60 0.45 0.28 1</diffuse></material></visual></link></model>
+
+    <!-- Storage shelves -->
+    <model name="store_shelf1"><static>true</static><pose>12 -15 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 6 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 6 2.0</size></box></geometry>
+        <material><ambient>0.40 0.40 0.40 1</ambient><diffuse>0.40 0.40 0.40 1</diffuse></material></visual></link></model>
+
+    <model name="store_shelf2"><static>true</static><pose>20 -15 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 6 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 6 2.0</size></box></geometry>
+        <material><ambient>0.40 0.40 0.40 1</ambient><diffuse>0.40 0.40 0.40 1</diffuse></material></visual></link></model>
+
+    <model name="store_shelf3"><static>true</static><pose>28 -15 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 6 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 6 2.0</size></box></geometry>
+        <material><ambient>0.40 0.40 0.40 1</ambient><diffuse>0.40 0.40 0.40 1</diffuse></material></visual></link></model>
+
+    <model name="store_landmark"><static>true</static><pose>35 -25 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 1.5 1.5</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 1.5 1.5</size></box></geometry>
+        <material><ambient>0.45 0.30 0.52 1</ambient><diffuse>0.45 0.30 0.52 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- WEST CORRIDOR — x:-40 to -8, y:-8 to +8                       -->
+    <!-- Rich landmarks every 4m — robot_0 patrols this full corridor   -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <model name="corr_W_obj1"><static>true</static><pose>-36 0 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.85 0.20 0.20 1</ambient><diffuse>0.85 0.20 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj2"><static>true</static><pose>-32 3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.4 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.4 1.0</size></box></geometry>
+        <material><ambient>0.20 0.20 0.85 1</ambient><diffuse>0.20 0.20 0.85 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj3"><static>true</static><pose>-28 -3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.20 0.85 0.20 1</ambient><diffuse>0.20 0.85 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj4"><static>true</static><pose>-24 2 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.4 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.4 1.0</size></box></geometry>
+        <material><ambient>0.85 0.65 0.10 1</ambient><diffuse>0.85 0.65 0.10 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj5"><static>true</static><pose>-20 -2 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.55 0.10 0.85 1</ambient><diffuse>0.55 0.10 0.85 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj6"><static>true</static><pose>-16 3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.4 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.4 1.0</size></box></geometry>
+        <material><ambient>0.10 0.65 0.65 1</ambient><diffuse>0.10 0.65 0.65 1</diffuse></material></visual></link></model>
+
+    <model name="corr_W_obj7"><static>true</static><pose>-12 -3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.85 0.20 0.55 1</ambient><diffuse>0.85 0.20 0.55 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- EAST CORRIDOR — x:+8 to +40, y:-8 to +8                       -->
+    <!-- Connects hub to east side of building                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <model name="corr_E_obj1"><static>true</static><pose>14 2 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.85 0.20 0.20 1</ambient><diffuse>0.85 0.20 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="corr_E_obj2"><static>true</static><pose>20 -3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.4 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.4 1.0</size></box></geometry>
+        <material><ambient>0.20 0.20 0.85 1</ambient><diffuse>0.20 0.20 0.85 1</diffuse></material></visual></link></model>
+
+    <model name="corr_E_obj3"><static>true</static><pose>28 3 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>1.0</length></cylinder></geometry>
+        <material><ambient>0.20 0.85 0.20 1</ambient><diffuse>0.20 0.85 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="corr_E_obj4"><static>true</static><pose>36 -2 0.5 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.4 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.4 1.0</size></box></geometry>
+        <material><ambient>0.85 0.65 0.10 1</ambient><diffuse>0.85 0.65 0.10 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ISLAND 1 — WEIRD SHAPED CLUSTER (north-west open area)         -->
+    <!-- Robot_1 patrols around this — tests island mapping             -->
+    <!-- Irregular L-shaped + cylinder cluster robots must navigate around -->
+    <!-- Centre approx (-22, 18), spans ~8x6m                          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- L-shape arm 1 — horizontal -->
+    <model name="island1_arm1"><static>true</static><pose>-22 20 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>6 1.2 1.5</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>6 1.2 1.5</size></box></geometry>
+        <material><ambient>0.35 0.28 0.22 1</ambient><diffuse>0.35 0.28 0.22 1</diffuse></material></visual></link></model>
+
+    <!-- L-shape arm 2 — vertical leg -->
+    <model name="island1_arm2"><static>true</static><pose>-25 17 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.2 4 1.5</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.2 4 1.5</size></box></geometry>
+        <material><ambient>0.35 0.28 0.22 1</ambient><diffuse>0.35 0.28 0.22 1</diffuse></material></visual></link></model>
+
+    <!-- Cluster of cylinders near the L — forces robot to weave -->
+    <model name="island1_cyl1"><static>true</static><pose>-18 18 0.6 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.35</radius><length>1.2</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.35</radius><length>1.2</length></cylinder></geometry>
+        <material><ambient>0.70 0.38 0.15 1</ambient><diffuse>0.70 0.38 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="island1_cyl2"><static>true</static><pose>-17 21 0.6 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.3</radius><length>1.2</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.3</radius><length>1.2</length></cylinder></geometry>
+        <material><ambient>0.20 0.55 0.70 1</ambient><diffuse>0.20 0.55 0.70 1</diffuse></material></visual></link></model>
+
+    <model name="island1_cyl3"><static>true</static><pose>-20 23 0.6 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.25</radius><length>1.2</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.25</radius><length>1.2</length></cylinder></geometry>
+        <material><ambient>0.65 0.20 0.65 1</ambient><diffuse>0.65 0.20 0.65 1</diffuse></material></visual></link></model>
+
+    <!-- Diagonal box — makes the island shape irregular and asymmetric -->
+    <model name="island1_diag"><static>true</static><pose>-24 22 0.5 0 0 0.5236</pose>
+      <link name="l"><collision name="c"><geometry><box><size>3 0.8 1.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>3 0.8 1.0</size></box></geometry>
+        <material><ambient>0.50 0.48 0.20 1</ambient><diffuse>0.50 0.48 0.20 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ISLAND 2 — CIRCULAR PILLAR RING (south-east open area)         -->
+    <!-- Robot_2 goes around this ring — classic roundabout loop        -->
+    <!-- Centre (22, -22), radius ~4m, 6 pillars evenly spaced          -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <model name="island2_p1"><static>true</static><pose>26 -22 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.80 0.15 0.15 1</ambient><diffuse>0.80 0.15 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="island2_p2"><static>true</static><pose>24 -18.54 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.15 0.80 0.15 1</ambient><diffuse>0.15 0.80 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="island2_p3"><static>true</static><pose>20 -18.54 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.15 0.15 0.80 1</ambient><diffuse>0.15 0.15 0.80 1</diffuse></material></visual></link></model>
+
+    <model name="island2_p4"><static>true</static><pose>18 -22 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.80 0.80 0.15 1</ambient><diffuse>0.80 0.80 0.15 1</diffuse></material></visual></link></model>
+
+    <model name="island2_p5"><static>true</static><pose>20 -25.46 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.80 0.15 0.80 1</ambient><diffuse>0.80 0.15 0.80 1</diffuse></material></visual></link></model>
+
+    <model name="island2_p6"><static>true</static><pose>24 -25.46 0.75 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.5</length></cylinder></geometry>
+        <material><ambient>0.15 0.80 0.80 1</ambient><diffuse>0.15 0.80 0.80 1</diffuse></material></visual></link></model>
+
+    <!-- Centre piece of ring island — tall distinctive marker -->
+    <model name="island2_centre"><static>true</static><pose>22 -22 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 1.5 2.0</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 1.5 2.0</size></box></geometry>
+        <material><ambient>0.90 0.90 0.90 1</ambient><diffuse>0.90 0.90 0.90 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- ISLAND 3 — SCATTERED BOULDER FIELD (south-west open area)      -->
+    <!-- Multiple robots can traverse this — tests open-space mapping   -->
+    <!-- Random-looking cluster centred around (-25, -20)               -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <model name="boulder1"><static>true</static><pose>-30 -14 0.4 0 0 0.3</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.2 0.9 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.2 0.9 0.8</size></box></geometry>
+        <material><ambient>0.50 0.47 0.43 1</ambient><diffuse>0.50 0.47 0.43 1</diffuse></material></visual></link></model>
+
+    <model name="boulder2"><static>true</static><pose>-34 -17 0.4 0 0 1.1</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.5 1.0 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.5 1.0 0.8</size></box></geometry>
+        <material><ambient>0.48 0.45 0.40 1</ambient><diffuse>0.48 0.45 0.40 1</diffuse></material></visual></link></model>
+
+    <model name="boulder3"><static>true</static><pose>-28 -20 0.4 0 0 0.7</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.0 1.3 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.0 1.3 0.8</size></box></geometry>
+        <material><ambient>0.52 0.49 0.44 1</ambient><diffuse>0.52 0.49 0.44 1</diffuse></material></visual></link></model>
+
+    <model name="boulder4"><static>true</static><pose>-32 -24 0.4 0 0 0.2</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.9 1.1 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.9 1.1 0.8</size></box></geometry>
+        <material><ambient>0.46 0.43 0.38 1</ambient><diffuse>0.46 0.43 0.38 1</diffuse></material></visual></link></model>
+
+    <model name="boulder5"><static>true</static><pose>-37 -22 0.4 0 0 0.9</pose>
+      <link name="l"><collision name="c"><geometry><box><size>1.3 0.8 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>1.3 0.8 0.8</size></box></geometry>
+        <material><ambient>0.54 0.51 0.46 1</ambient><diffuse>0.54 0.51 0.46 1</diffuse></material></visual></link></model>
+
+    <!-- Tall marker in boulder field — visible from far for loop closure -->
+    <model name="boulder_marker"><static>true</static><pose>-33 -19 1.0 0 0 0</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.3</radius><length>2.0</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.3</radius><length>2.0</length></cylinder></geometry>
+        <material><ambient>0.85 0.55 0.10 1</ambient><diffuse>0.85 0.55 0.10 1</diffuse></material></visual></link></model>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- RANDOM SCATTER — additional objects throughout shared spaces    -->
+    <!-- Ensures no area is completely featureless                       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <model name="scatter1"><static>true</static><pose>-5 15 0.4 0 0 0.4</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.5 0.5 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+        <material><ambient>0.65 0.20 0.20 1</ambient><diffuse>0.65 0.20 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="scatter2"><static>true</static><pose>5 -15 0.4 0 0 0.8</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>0.8</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>0.8</length></cylinder></geometry>
+        <material><ambient>0.20 0.65 0.20 1</ambient><diffuse>0.20 0.65 0.20 1</diffuse></material></visual></link></model>
+
+    <model name="scatter3"><static>true</static><pose>-15 -5 0.4 0 0 1.2</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.6 0.3 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.6 0.3 0.8</size></box></geometry>
+        <material><ambient>0.20 0.20 0.65 1</ambient><diffuse>0.20 0.20 0.65 1</diffuse></material></visual></link></model>
+
+    <model name="scatter4"><static>true</static><pose>15 5 0.4 0 0 0.3</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.15</radius><length>0.8</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.15</radius><length>0.8</length></cylinder></geometry>
+        <material><ambient>0.65 0.65 0.10 1</ambient><diffuse>0.65 0.65 0.10 1</diffuse></material></visual></link></model>
+
+    <model name="scatter5"><static>true</static><pose>-5 -20 0.4 0 0 0.6</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.5 0.5 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+        <material><ambient>0.65 0.10 0.65 1</ambient><diffuse>0.65 0.10 0.65 1</diffuse></material></visual></link></model>
+
+    <model name="scatter6"><static>true</static><pose>-35 8 0.4 0 0 0.9</pose>
+      <link name="l"><collision name="c"><geometry><cylinder><radius>0.2</radius><length>0.8</length></cylinder></geometry></collision>
+      <visual name="v"><geometry><cylinder><radius>0.2</radius><length>0.8</length></cylinder></geometry>
+        <material><ambient>0.10 0.65 0.65 1</ambient><diffuse>0.10 0.65 0.65 1</diffuse></material></visual></link></model>
+
+    <model name="scatter7"><static>true</static><pose>35 12 0.4 0 0 0.2</pose>
+      <link name="l"><collision name="c"><geometry><box><size>0.4 0.7 0.8</size></box></geometry></collision>
+      <visual name="v"><geometry><box><size>0.4 0.7 0.8</size></box></geometry>
+        <material><ambient>0.65 0.40 0.10 1</ambient><diffuse>0.65 0.40 0.10 1</diffuse></material></visual></link></model>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 0 95 0 1.5707 0</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+
+  </world>
+</sdf>

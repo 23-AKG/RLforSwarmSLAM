@@ -12,6 +12,7 @@ using the pointcloud's frame_id.
 import os
 from launch import LaunchDescription
 from launch.actions import (
+    ExecuteProcess,
     IncludeLaunchDescription,
     TimerAction,
     LogInfo,
@@ -19,6 +20,7 @@ from launch.actions import (
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def generate_launch_description():
@@ -45,6 +47,27 @@ def generate_launch_description():
                 os.path.join(pkg_sim, 'launch', 'explore.launch.py')
             )
         )
+    )
+
+    # RL integration :
+    # ── Broker Selector Node (one instance, global) ───────────────────────
+    broker_selector = TimerAction(
+        period=12.0,  # start after CSLAM nodes are up
+        actions=[
+            LogInfo(msg='[bridge] Starting RL broker selector...'),
+            ExecuteProcess(
+                cmd=[
+                    'python3',
+                    os.path.join(THIS_DIR, 'broker_selector_node.py'),
+                    '--ros-args',
+                    '-p', 'robot_id:=0',
+                    '-p', 'max_nb_robots:=3',
+                    '-p', 'broker_selection_period_sec:=3.0',
+                    '-p', f'model_path:={os.path.join(THIS_DIR, "broker_policy_v3_world_calibrated_2.zip")}',
+                ],
+                output='screen',
+            )
+        ]
     )
 
     for r in robots:
@@ -115,6 +138,23 @@ def generate_launch_description():
             output='screen',
         )
 
+        # Node(
+        #     package='tf2_ros',
+        #     executable='static_transform_publisher',
+        #     name='tf_r1_to_r0',
+        #     arguments=['0','0','0','0','0','0',
+        #             'robot_0/odom',
+        #             'robot_1/odom'],
+        # )
+        # Node(
+        #     package='tf2_ros',
+        #     executable='static_transform_publisher',
+        #     name='tf_r2_to_r0',
+        #     arguments=['0','0','0','0','0','0',
+        #             'robot_0/odom',
+        #             'robot_2/odom'],
+        # )
+
         # ── Relay nodes start at t=8s ─────────────────────────────
         delayed_relays = TimerAction(
             period=8.0,
@@ -158,5 +198,8 @@ def generate_launch_description():
             delayed_relays,
             delayed_cslam,
         ])
+
+    actions.append(broker_selector)
+
 
     return LaunchDescription(actions)

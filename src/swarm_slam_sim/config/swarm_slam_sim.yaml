@@ -10,7 +10,8 @@
     frontend:
       odom_topic: "odom"
       pointcloud_topic: "pointcloud"
-      sensor_type: "lidar"
+      # sensor_type: "lidar"
+      sensor_type: "rgbd"
       voxel_size: 0.3
       registration_min_inliers: 30
       inter_robot_loop_closure_budget: 1
@@ -28,6 +29,11 @@
       enable_intra_robot_loop_closures: true
       use_vertex_cover_selection: true
       map_manager_process_period_ms: 100
+      rgb_image_topic: "camera/image_raw"              # from your topic list
+      depth_image_topic: "camera/depth/image_raw"      # from your topic list
+      camera_info_topic: "camera/camera_info"          # from your topic list\
+      sensor_base_frame_id: "camera_link"              # keep this
+      odom_topic: "odom"                               # keep this
     neighbor_management:
       enable_neighbor_monitoring: true
       max_heartbeat_delay_sec: 10.0
